@@ -83,6 +83,15 @@ void pwdCommand(){
   std::cout << getcwd(nullptr, 0) << std::endl;
 }
 
+void cdCommand(const std::string &input){
+  std::string directory = input.substr(3);
+
+  if(chdir(directory.c_str()) != 0){
+    std::cout << "cd: " << directory << ": No such file or directory";
+  }
+
+}
+
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -112,6 +121,9 @@ int main() {
     }
     else if(command == "pwd"){
       pwdCommand();
+    }
+    else if(command == "cd"){
+      cdCommand(input);
     }
     else{
       std::string path = findExecutable(command);
