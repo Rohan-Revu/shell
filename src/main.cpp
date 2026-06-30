@@ -3,41 +3,79 @@
 #include <sstream>
 #include <unordered_set>
 #include <unistd.h>
+#include <vector>
+#include <sys/wait.h>
 
 
-void typeCommand(std::string input){
-  std::string type_check = input.substr(5);
-  std::unordered_set<std::string> commands = {
-    "echo",
-    "exit",
-    "type"
-  };
-  bool found = false;
-
-  if(commands.contains(type_check)){
-    found = true;
-    std::cout << type_check << " is a shell builtin" << std::endl;
-    return;
-  }
-  if(!found){
+std::string findExecutable(const std::string &command) {
     std::string path = getenv("PATH");
     std::istringstream ss(path);
-    std::string dictionary;
+    std::string directory;
 
-    while(getline(ss, dictionary, ':')){
-      std::string full_path = dictionary + "/" + type_check;
+    while (getline(ss, directory, ':')) {
+        std::string fullPath = directory + "/" + command;
 
-      if(!access(full_path.c_str(), X_OK)){
-        found = true;
-        std::cout << type_check << " is " << full_path << std::endl;
-        return;
-      }
+        if (access(fullPath.c_str(), X_OK) == 0) {
+            return fullPath;
+        }
     }
-    std::cout << type_check << ": not found" << std::endl;
 
-    return;
+    return "";
+}
+
+
+void typeCommand(const std::string &input) {
+    std::string cmd = input.substr(5);
+
+    std::unordered_set<std::string> builtins = {
+        "echo",
+        "exit",
+        "type"
+    };
+
+    if (builtins.contains(cmd)) {
+        std::cout << cmd << " is a shell builtin\n";
+        return;
+    }
+
+    std::string path = findExecutable(cmd);
+
+    if (!path.empty())
+        std::cout << cmd << " is " << path << '\n';
+    else
+        std::cout << cmd << ": not found\n";
+}
+
+
+void executeProgram(const std::string &path, const std::string &input){
+  std::vector<std::string> args;
+  std::stringstream ss(input);
+  std::string arg;
+
+  while(ss >> arg){
+    args.push_back(arg);
   }
 
+  std::vector<char*> argv;
+
+  for(auto& arg : args){
+    argv.push_back(const_cast<char*>(arg.c_str()));
+  }
+  argv.push_back(nullptr);
+
+
+  pid_t pid = fork();
+
+
+  if(pid == 0){
+    execv(path.c_str(), argv.data());
+
+    perror("execv");
+    exit(1);
+  }
+  else{
+    waitpid(pid, nullptr, 0);
+  }
 }
 
 
@@ -50,6 +88,7 @@ int main() {
   while(true){
     std::cout << "$ ";
 
+    // Read line
     std::string input;
     std::getline(std::cin, input);
 
@@ -67,7 +106,13 @@ int main() {
       typeCommand(input);
     }
     else{
-      std::cout << command << ": command not found" << std::endl;
+      std::string path = findExecutable(command);
+
+      if(path.empty())
+        std::cout << command << ": not found" << std::endl;
+      else{
+        executeProgram(path, input);
+      }
     }
     
   }
