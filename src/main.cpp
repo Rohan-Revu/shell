@@ -111,7 +111,7 @@ int main() {
       typeCommand(input);
     }
     else if(command == "pwd"){
-      pwdCommad();
+      pwdCommand();
     }
     else{
       std::string path = findExecutable(command);
