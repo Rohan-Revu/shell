@@ -87,6 +87,10 @@ void pwdCommand(){
 void cdCommand(const std::string &input){
   std::string directory = input.substr(3);
 
+  if(directory == "~"){
+    directory = getenv("HOME");
+  }
+
   if(chdir(directory.c_str()) != 0){
     std::cout << "cd: " << directory << ": No such file or directory" << std::endl;
   }
