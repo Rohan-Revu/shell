@@ -112,6 +112,7 @@ std::vector<std::string> parseArguments(const std::string &input) {
             }
         }
         else {
+            std::cout << c << std::endl;
             current += c;
         }
     }
@@ -148,7 +149,7 @@ int main() {
       break;
     }
     else if(command == "echo"){
-      std::cout << input.substr(5) << std::endl;
+      echoCommand(args);
     }
     else if(command == "type"){
       typeCommand(args[1]);
