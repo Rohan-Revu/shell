@@ -8,9 +8,9 @@ int main() {
 
   std::cout << "$ ";
 
-  std::String command;
+  std::string command;
   std::getline(std::cin, command);
 
   std::cout << command << ": command not found" << std::endl;
-  
+
 }
