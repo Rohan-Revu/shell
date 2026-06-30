@@ -31,7 +31,8 @@ void typeCommand(const std::string &input) {
         "echo",
         "exit",
         "type",
-        "pwd"
+        "pwd",
+        "cd"
     };
 
     if (builtins.contains(cmd)) {
@@ -87,7 +88,7 @@ void cdCommand(const std::string &input){
   std::string directory = input.substr(3);
 
   if(chdir(directory.c_str()) != 0){
-    std::cout << "cd: " << directory << ": No such file or directory";
+    std::cout << "cd: " << directory << ": No such file or directory" << std::endl;
   }
 
 }
