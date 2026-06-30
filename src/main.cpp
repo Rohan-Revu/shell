@@ -98,13 +98,26 @@ void cdCommand(std::string directory){
 
 std::vector<std::string> parseArguments(const std::string &input) {
     std::vector<std::string> args;
+    std::string current;
+    bool inSingleQuote = false;
 
-    std::stringstream ss(input);
+    for (char c : input) {
+        if (c == '\'') {
+            inSingleQuote = !inSingleQuote;
+        }
+        else if (c == ' ' && !inSingleQuote) {
+            if (!current.empty()) {
+                args.push_back(current);
+                current.clear();
+            }
+        }
+        else {
+            current += c;
+        }
+    }
 
-    std::string word;
-
-    while (ss >> word)
-        args.push_back(word);
+    if (!current.empty())
+        args.push_back(current);
 
     return args;
 }
