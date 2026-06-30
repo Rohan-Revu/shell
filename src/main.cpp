@@ -99,13 +99,19 @@ void cdCommand(std::string directory){
 std::vector<std::string> parseArguments(const std::string &input) {
     std::vector<std::string> args;
     std::string current;
+
     bool inSingleQuote = false;
+    bool inDoubleQuote = false;
 
     for (char c : input) {
-        if (c == '\'') {
+
+        if (c == '\'' && !inDoubleQuote) {
             inSingleQuote = !inSingleQuote;
         }
-        else if (c == ' ' && !inSingleQuote) {
+        else if (c == '"' && !inSingleQuote) {
+            inDoubleQuote = !inDoubleQuote;
+        }
+        else if (c == ' ' && !inSingleQuote && !inDoubleQuote) {
             if (!current.empty()) {
                 args.push_back(current);
                 current.clear();
