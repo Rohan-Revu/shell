@@ -13,10 +13,10 @@ void typeCommand(std::string input){
   };
   bool found = false;
 
-  if(commands.contain(type_check)){
+  if(commands.contains(type_check)){
     found = true;
     std::cout << type_check << " is a shell builtin" << std::endl;
-    break
+    break;
   }
   if(!found){
     std::string path = getenv("PATH");
