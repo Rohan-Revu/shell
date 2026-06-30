@@ -10,14 +10,26 @@ int main() {
   while(true){
     std::cout << "$ ";
 
-    std::string command;
-    std::getline(std::cin, command);
+    std::string input;
+    std::getline(std::cin, input);
+
+
+    std::string command = input.substr(0, input.find(" "));
+
 
     if(command == "exit"){
       break;
     }
-    else if(command.substr(0, 5) == "echo "){
-      std::cout << command.substr(5) << std::endl;
+    else if(command == "echo"){
+      std::cout << input.substr(5) << std::endl;
+    }
+    else if(command == "type"){
+      if(input.substr(5) == "echo" || input.substr(5) == "exit" || input.substr(5) == "type"){
+        std::cout <<input.substr(5) << " is a builtin command" << std::endl;
+      }
+      else{
+        std::cout << input.substr(5) <<": not found" << std::endl;
+      }
     }
     else{
       std::cout << command << ": command not found" << std::endl;
