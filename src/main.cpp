@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <unordered_set>
+#include <unistd.h>
 
 
 void typeCommand(std::string input){
