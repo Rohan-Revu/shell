@@ -112,7 +112,6 @@ std::vector<std::string> parseArguments(const std::string &input) {
             }
         }
         else {
-            std::cout << c << std::endl;
             current += c;
         }
     }
