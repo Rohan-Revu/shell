@@ -24,9 +24,7 @@ std::string findExecutable(const std::string &command) {
 }
 
 
-void typeCommand(const std::string &input) {
-    std::string cmd = input.substr(5);
-
+void typeCommand(const std::string &cmd) {
     std::unordered_set<std::string> builtins = {
         "echo",
         "exit",
@@ -36,22 +34,31 @@ void typeCommand(const std::string &input) {
     };
 
     if (builtins.contains(cmd)) {
-        std::cout << cmd << " is a shell builtin\n";
+        std::cout << cmd << " is a shell builtin" << std::endl;
         return;
     }
 
     std::string path = findExecutable(cmd);
 
     if (!path.empty())
-        std::cout << cmd << " is " << path << '\n';
+        std::cout << cmd << " is " << path << std::endl;
     else
-        std::cout << cmd << ": not found\n";
+        std::cout << cmd << ": not found" << std::endl;
+}
+
+void echoCommand(const std::vector<std::string> &args){
+  for (size_t i = 1; i < args.size(); i++) {
+    if (i > 1)
+        std::cout << " ";
+
+    std::cout << args[i];
+  }
+  std::cout << std::endl;
 }
 
 
-void executeProgram(const std::string &path, const std::string &input){
+void executeProgram(const std::string &path, const std::vector<std::string> &agrs){
   std::vector<std::string> args;
-  std::stringstream ss(input);
   std::string arg;
 
   while(ss >> arg){
@@ -84,9 +91,7 @@ void pwdCommand(){
   std::cout << getcwd(nullptr, 0) << std::endl;
 }
 
-void cdCommand(const std::string &input){
-  std::string directory = input.substr(3);
-
+void cdCommand(std::string directory){
   if(directory == "~"){
     directory = getenv("HOME");
   }
@@ -95,6 +100,20 @@ void cdCommand(const std::string &input){
     std::cout << "cd: " << directory << ": No such file or directory" << std::endl;
   }
 
+}
+
+
+std::vector<std::string> parseArguments(const std::string &input) {
+    std::vector<std::string> args;
+
+    std::stringstream ss(input);
+
+    std::string word;
+
+    while (ss >> word)
+        args.push_back(word);
+
+    return args;
 }
 
 
@@ -112,7 +131,8 @@ int main() {
     std::getline(std::cin, input);
 
 
-    std::string command = input.substr(0, input.find(" "));
+    std::vector<std::string> args = parseArguments(input);
+    std::string command = args[0];
 
 
     if(command == "exit"){
@@ -122,13 +142,13 @@ int main() {
       std::cout << input.substr(5) << std::endl;
     }
     else if(command == "type"){
-      typeCommand(input);
+      typeCommand(args[1]);
     }
     else if(command == "pwd"){
       pwdCommand();
     }
     else if(command == "cd"){
-      cdCommand(input);
+      cdCommand(args[1]);
     }
     else{
       std::string path = findExecutable(command);
