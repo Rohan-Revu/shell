@@ -57,7 +57,7 @@ void echoCommand(const std::vector<std::string> &args){
 }
 
 
-void executeProgram(const std::string &path, const std::vector<std::string> &agrs){
+void executeProgram(const std::string &path, const std::vector<std::string> &args){
   std::vector<char*> argv;
 
   for(auto& arg : args){
