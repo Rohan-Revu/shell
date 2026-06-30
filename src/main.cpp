@@ -58,13 +58,6 @@ void echoCommand(const std::vector<std::string> &args){
 
 
 void executeProgram(const std::string &path, const std::vector<std::string> &agrs){
-  std::vector<std::string> args;
-  std::string arg;
-
-  while(ss >> arg){
-    args.push_back(arg);
-  }
-
   std::vector<char*> argv;
 
   for(auto& arg : args){
@@ -132,6 +125,9 @@ int main() {
 
 
     std::vector<std::string> args = parseArguments(input);
+    if (args.empty()) {
+      continue;
+    }
     std::string command = args[0];
 
 
@@ -156,7 +152,7 @@ int main() {
       if(path.empty())
         std::cout << command << ": not found" << std::endl;
       else{
-        executeProgram(path, input);
+        executeProgram(path, args);
       }
     }
     
