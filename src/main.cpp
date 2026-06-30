@@ -16,7 +16,7 @@ void typeCommand(std::string input){
   if(commands.contains(type_check)){
     found = true;
     std::cout << type_check << " is a shell builtin" << std::endl;
-    break;
+    return;
   }
   if(!found){
     std::string path = getenv("PATH");
