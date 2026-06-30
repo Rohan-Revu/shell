@@ -29,7 +29,7 @@ void typeCommand(std::string input){
 
       if(!access(full_path.c_str(), X_OK)){
         found = true;
-        std::cout << type_check << " is" << full_path << std::endl;
+        std::cout << type_check << " is " << full_path << std::endl;
         return;
       }
     }
