@@ -30,7 +30,8 @@ void typeCommand(const std::string &input) {
     std::unordered_set<std::string> builtins = {
         "echo",
         "exit",
-        "type"
+        "type",
+        "pwd"
     };
 
     if (builtins.contains(cmd)) {
@@ -78,6 +79,10 @@ void executeProgram(const std::string &path, const std::string &input){
   }
 }
 
+void pwdCommand(){
+  std::cout << getcwd(nullptr, 0) << std::endl;
+}
+
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -104,6 +109,9 @@ int main() {
     }
     else if(command == "type"){
       typeCommand(input);
+    }
+    else if(command == "pwd"){
+      pwdCommad();
     }
     else{
       std::string path = findExecutable(command);
