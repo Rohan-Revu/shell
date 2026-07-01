@@ -103,8 +103,14 @@ std::vector<std::string> parseArguments(const std::string &input) {
     bool inSingleQuote = false;
     bool inDoubleQuote = false;
 
-    for (char c : input) {
+    for (int i=0; i < input.size(); i++) {
+        char c = intput[i];
 
+
+        if(c=='\\' && i + 1 < input.size()) {
+            current += input[i + 1];
+            i++;
+        }
         if (c == '\'' && !inDoubleQuote) {
             inSingleQuote = !inSingleQuote;
         }
