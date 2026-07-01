@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <sstream>
 #include <unistd.h>
+#include <sys/stat.h>
 
 
 std::vector<std::string> findMatchingExecutables(const std::string &prefix) {
