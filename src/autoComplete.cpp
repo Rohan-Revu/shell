@@ -95,11 +95,18 @@ std::vector<std::string> getFileCompletions(const std::string& prefix)
 {
     size_t slashPos = prefix.find_last_of('/');
 
-    std::string directory = prefix.substr(0, slashPos + 1);    
-    std::string filePrefix = prefix.substr(slashPos + 1);
+    std::string directory;
+    std::string filePrefix;
 
+    if (slashPos == std::string::npos) {
+        directory = ".";
+        filePrefix = prefix;
+    }
+    else {
+        directory = prefix.substr(0, slashPos + 1);
+        filePrefix = prefix.substr(slashPos + 1);
+    }
 
-    
     std::vector<std::string> matches;
 
     DIR* dp = opendir(directory.c_str());
@@ -113,8 +120,13 @@ std::vector<std::string> getFileCompletions(const std::string& prefix)
     {
         std::string file = entry->d_name;
 
-        if(file.starts_with(filePrefix))
-            matches.push_back(file);
+        if (file.starts_with(filePrefix))
+        {
+            if (directory == ".")
+                matches.push_back(file);
+            else
+                matches.push_back(directory + file);
+        }
     }
 
     closedir(dp);
