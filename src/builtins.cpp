@@ -1,0 +1,57 @@
+#include "builtins.h"
+#include "executeProgram.h"
+
+#include <iostream>
+#include <unordered_set>
+#include <unistd.h>
+
+
+void echoCommand(const std::vector<std::string> &args){
+  for (size_t i = 1; i < args.size(); i++) {
+    if (i > 1)
+        std::cout << " ";
+
+    std::cout << args[i];
+  }
+  std::cout << std::endl;
+}
+
+
+void pwdCommand(){
+  std::cout << getcwd(nullptr, 0) << std::endl;
+}
+
+
+void cdCommand(std::string directory){
+  if(directory == "~"){
+    directory = getenv("HOME");
+  }
+
+  if(chdir(directory.c_str()) != 0){
+    std::cout << "cd: " << directory << ": No such file or directory" << std::endl;
+  }
+
+}
+
+
+void typeCommand(const std::string &cmd) {
+    std::unordered_set<std::string> builtins = {
+        "echo",
+        "exit",
+        "type",
+        "pwd",
+        "cd"
+    };
+
+    if (builtins.contains(cmd)) {
+        std::cout << cmd << " is a shell builtin" << std::endl;
+        return;
+    }
+
+    std::string path = findExecutable(cmd);
+
+    if (!path.empty())
+        std::cout << cmd << " is " << path << std::endl;
+    else
+        std::cout << cmd << ": not found" << std::endl;
+}
