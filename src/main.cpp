@@ -104,7 +104,7 @@ std::vector<std::string> parseArguments(const std::string &input) {
     bool inDoubleQuote = false;
 
     for (int i=0; i < input.size(); i++) {
-        char c = intput[i];
+        char c = input[i];
 
 
         if(c=='\\' && i + 1 < input.size()) {
