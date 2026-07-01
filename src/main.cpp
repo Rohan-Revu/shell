@@ -130,6 +130,10 @@ std::vector<std::string> parseArguments(const std::string &input) {
             current += c;
         }
     }
+    for (const auto &arg : args) {
+      std::cerr << "[" << arg << "]";
+    }
+    std::cerr << '\n';
 
     if (!current.empty())
         args.push_back(current);
@@ -156,12 +160,25 @@ int main() {
     std::string outputFile;
     bool redirectStdout = false;
     bool redirectStderr = false;
+    bool appendStdout = false;
 
     for (size_t i = 0; i < args.size(); i++) {
       if (args[i] == ">" || args[i] == "1>") {
         
         if(i+1 < args.size()){
           redirectStdout = true;
+          outputFile = args[i + 1];
+
+          args.erase(args.begin() + i, args.begin() + i + 2);
+          break;
+        }
+        
+      }
+      else if(args[i] == ">>" || args[i] == "1>>") {
+        
+        if(i+1 < args.size()){
+          redirectStdout = true;
+          appendStdout = true;
           outputFile = args[i + 1];
 
           args.erase(args.begin() + i, args.begin() + i + 2);
@@ -184,7 +201,14 @@ int main() {
 
     int savedStdout = -1;
     if (redirectStdout) {
-        int fd = open(outputFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+      int flags = O_WRONLY | O_CREAT;
+
+      if (appendStdout)
+        flags |= O_APPEND;
+      else
+        flags |= O_TRUNC;
+      
+        int fd = open(outputFile.c_str(), flags, 0644);
 
         savedStdout = dup(STDOUT_FILENO);
         dup2(fd, STDOUT_FILENO);
@@ -193,7 +217,8 @@ int main() {
 
     int savedStderr = -1;
     if (redirectStderr) {
-        int fd = open(outputFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        int flags = O_WRONLY | O_CREAT | O_TRUNC;
+        int fd = open(outputFile.c_str(), flags, 0644);
 
         savedStderr = dup(STDERR_FILENO);
         dup2(fd, STDERR_FILENO);
