@@ -239,7 +239,8 @@ int main() {
     char c;
 
     while (true) {
-      std::cin.get(c);
+       if (read(STDIN_FILENO, &c, 1) <= 0)
+        break;
 
       if (c == '\n') {
           break;
@@ -249,6 +250,7 @@ int main() {
         continue;
       }
       input += c;
+      std::cout << c;
     }
 
 
