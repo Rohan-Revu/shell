@@ -8,13 +8,7 @@
 #include <fcntl.h>
 #include <termios.h>
 
-termios orig_termios;
-tcgetattr(STDIN_FILENO, &orig_termios);
 
-termios raw = orig_termios;
-raw.c_lflag &= ~(ICANON | ECHO);
-
-tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 
 std::string findExecutable(const std::string &command) {
     std::string path = getenv("PATH");
@@ -234,6 +228,13 @@ bool autocomplete(std::string &input) {
 
 
 int main() {
+  termios orig_termios;
+  tcgetattr(STDIN_FILENO, &orig_termios);
+
+  termios raw = orig_termios;
+  raw.c_lflag &= ~(ICANON | ECHO);
+
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
