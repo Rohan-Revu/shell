@@ -154,13 +154,14 @@ int main() {
 
     std::vector<std::string> args = parseArguments(input);
     std::string outputFile;
-    bool redirect = false;
+    bool redirectStdout = false;
+    bool redirectStderr = false;
 
     for (size_t i = 0; i < args.size(); i++) {
       if (args[i] == ">" || args[i] == "1>") {
         
         if(i+1 < args.size()){
-          redirect = true;
+          redirectStdout = true;
           outputFile = args[i + 1];
 
           args.erase(args.begin() + i, args.begin() + i + 2);
@@ -171,7 +172,7 @@ int main() {
       else if(args[i] == "2>"){
 
         if(i+1 < args.size()){
-          redirect = true;
+          redirectStderr = true;
           outputFile = args[i + 1];
 
           args.erase(args.begin() + i, args.begin() + i + 2);
@@ -182,7 +183,7 @@ int main() {
     }
 
     int savedStdout = -1;
-    if (redirect) {
+    if (redirectStdout) {
         int fd = open(outputFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
         savedStdout = dup(STDOUT_FILENO);
@@ -191,7 +192,7 @@ int main() {
     }
 
     int savedStderr = -1;
-    if (redirect) {
+    if (redirectStderr) {
         int fd = open(outputFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
         savedStderr = dup(STDERR_FILENO);
