@@ -86,28 +86,31 @@ std::string readCommand(){
             }
             else {
               std::string lcp = longestCommonPrefix(matches);
-              if (lcp.size() > input.size()) {
-                  std::string remain = lcp.substr(input.size());
-                  std::cout << remain;
-                  input = lcp;
-                  lastWasTab = false;
-              }
-              else {
-                  if (!lastWasTab) {
-                      std::cout << '\a';
-                      lastWasTab = true;
+                if (lcp.size() > prefix.size()) {
+
+                    std::string remain = lcp.substr(prefix.size());
+                    std::cout << remain;
+
+                    if (pos == std::string::npos)
+                        input = lcp;
+                    else
+                        input = input.substr(0, pos + 1) + lcp;
+
+                    lastWasTab = false;
+            }
+            else {
+                if (!lastWasTab) {
+                    std::cout << '\a';
+                    lastWasTab = true;
                   }
-                  else {
-                      std::cout << '\n';
-
-                      for (const auto &m : matches)
-                          std::cout << m << "  ";
-
-                      std::cout << "\n$ " << input;
-
-                      lastWasTab = false;
-                  }
-              }
+                else {
+                    std::cout << '\n';
+                    for (const auto &m : matches)
+                        std::cout << m << "  ";
+                    std::cout << "\n$ " << input;
+                    lastWasTab = false;
+                }
+            }
           }
           continue;
         }
