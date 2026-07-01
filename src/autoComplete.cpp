@@ -79,9 +79,19 @@ std::string longestCommonPrefix(const std::vector<std::string>& matches) {
 
     std::string prefix = matches[0];
 
+    // Remove trailing '/' if present
+    if (!prefix.empty() && prefix.back() == '/')
+        prefix.pop_back();
+
     for (size_t i = 1; i < matches.size(); i++) {
 
-        while (!matches[i].starts_with(prefix)) {
+        std::string current = matches[i];
+
+        // Remove trailing '/' if present
+        if (!current.empty() && current.back() == '/')
+            current.pop_back();
+
+        while (!current.starts_with(prefix)) {
             prefix.pop_back();
 
             if (prefix.empty())
