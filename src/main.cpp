@@ -205,6 +205,26 @@ std::vector<std::string> parseArguments(const std::string &input) {
 }
 
 
+bool autocomplete(std::string &input) {
+    static const std::vector<std::string> builtins = {
+        "echo",
+        "exit"
+    };
+
+    for (const auto &cmd : builtins) {
+        if (cmd.starts_with(input)) {
+            std::string remaining = cmd.substr(input.size());
+            std::cout << remaining << ' ';
+            input = cmd + ' ';
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
 int main() {
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
@@ -216,7 +236,20 @@ int main() {
 
     // Read line
     std::string input;
-    std::getline(std::cin, input);
+    char c;
+
+    while (true) {
+      std::cin.get(c);
+
+      if (c == '\n') {
+          break;
+      }
+      if (c == '\t') {
+        autocomplete(input);
+        continue;
+      }
+      input += c;
+    }
 
 
     std::vector<std::string> args = parseArguments(input);
@@ -294,7 +327,7 @@ int main() {
     int savedStderr = -1;
     if (redirectStderr) {
         int flags = O_WRONLY | O_CREAT;
-        
+
         if (appendStderr) {
             flags |= O_APPEND;
         } else {
