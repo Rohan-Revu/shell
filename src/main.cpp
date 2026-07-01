@@ -107,11 +107,13 @@ std::vector<std::string> parseArguments(const std::string &input) {
         char c = input[i];
 
 
-        if(c=='\\' && i + 1 < input.size()) {
+        if(c=='\\' && !insingleQuote){ 
+          if(i + 1 < input.size()){
             current += input[i + 1];
             i++;
+          }
         }
-        if (c == '\'' && !inDoubleQuote) {
+        else if (c == '\'' && !inDoubleQuote) {
             inSingleQuote = !inSingleQuote;
         }
         else if (c == '"' && !inSingleQuote) {
