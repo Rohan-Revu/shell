@@ -168,6 +168,17 @@ int main() {
         }
         
       }
+      else if(args[i] == "2>"){
+
+        if(i+1 < args.size()){
+          redirect = true;
+          outputFile = args[i + 1];
+
+          args.erase(args.begin() + i, args.begin() + i + 2);
+          break;
+        }
+
+      }
     }
 
     int savedStdout = -1;
@@ -179,16 +190,29 @@ int main() {
         close(fd);
     }
 
-    if (args.empty()) {
+    int savedStderr = -1;
     if (redirect) {
-        std::cout.flush();
-        dup2(savedStdout, STDOUT_FILENO);
-        close(savedStdout);
-    }
-    continue;
-}
-    std::string command = args[0];
+        int fd = open(outputFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
+        savedStderr = dup(STDERR_FILENO);
+        dup2(fd, STDERR_FILENO);
+        close(fd);
+    }
+
+
+    
+
+    if (args.empty()) {
+      if (redirect) {
+          std::cout.flush();
+          dup2(savedStdout, STDOUT_FILENO);
+          close(savedStdout);
+      }
+      continue;
+    }
+
+
+    std::string command = args[0];
 
     if(command == "exit"){
       break;
@@ -214,12 +238,5 @@ int main() {
         executeProgram(path, args);
       }
     }
-    if (redirect) {
-    std::cout.flush();
-
-    dup2(savedStdout, STDOUT_FILENO);
-    close(savedStdout);
-  }
-
   }
 }
