@@ -252,6 +252,7 @@ int main() {
             break;
 
         if (c == '\n')
+            std::cout << std::endl;
             break;
 
         if (c == '\t') {
