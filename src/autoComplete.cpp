@@ -95,8 +95,8 @@ std::vector<std::string> getFileCompletions(const std::string& prefix)
 {
     size_t slashPos = prefix.find_last_of('/');
 
-    directory = prefix.substr(0, slashPos + 1);    
-    filePrefix = prefix.substr(slashPos + 1);
+    std::string directory = prefix.substr(0, slashPos + 1);    
+    std::string filePrefix = prefix.substr(slashPos + 1);
 
 
     
