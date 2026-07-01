@@ -204,7 +204,7 @@ int main() {
     
 
     if (args.empty()) {
-      if (redirect) {
+      if (redirectStdout || redirectStderr) {
           std::cout.flush();
           dup2(savedStdout, STDOUT_FILENO);
           close(savedStdout);
