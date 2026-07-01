@@ -61,15 +61,26 @@ std::string readCommand(){
             }
             else if (matches.size() == 1) {
                 std::string remain = matches[0].substr(prefix.size());
-                std::cout << remain << ' ';
 
-                if (pos == std::string::npos) {
-                    // Command completion
-                    input = matches[0] + ' ';
+                bool isDirectory =
+                    !matches[0].empty() &&
+                    matches[0].back() == '/';
+
+                if (isDirectory){
+                    std::cout << remain;
+
+                    if (pos == std::string::npos)
+                        input = matches[0];
+                    else
+                        input = input.substr(0, pos + 1) + matches[0];
                 }
-                else {
-                    // Filename completion
-                    input = input.substr(0, pos + 1)+ matches[0]+ ' ';
+                else{
+                    std::cout << remain << ' ';
+
+                    if (pos == std::string::npos)
+                        input = matches[0] + ' ';
+                    else
+                        input = input.substr(0, pos + 1) + matches[0] + ' ';
                 }
                 lastWasTab = false;
             }

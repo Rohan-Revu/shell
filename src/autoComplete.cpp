@@ -123,12 +123,22 @@ std::vector<std::string> getFileCompletions(const std::string& prefix)
          if (file == "." || file == "..")
             continue;
 
-        if (file.starts_with(filePrefix))
-        {
+        if (file.starts_with(filePrefix)){
+            std::string fullPath;
+
             if (directory == ".")
-                matches.push_back(file);
+                fullPath = file;
             else
-                matches.push_back(directory + file);
+                fullPath = directory + file;
+
+            struct stat st;
+
+            if (stat(fullPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode)){
+                matches.push_back(fullPath + "/");
+            }
+            else{
+                matches.push_back(fullPath);
+            }
         }
     }
 
