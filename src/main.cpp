@@ -207,39 +207,6 @@ std::vector<std::string> parseArguments(const std::string &input) {
     return args;
 }
 
-
-bool autocomplete(std::string &input) {
-    static const std::vector<std::string> builtins = {
-        "echo",
-        "exit"
-    };
-
-
-    // Check builtins
-    for (const auto &cmd : builtins) {
-        if (cmd.starts_with(input)) {
-            std::string remaining = cmd.substr(input.size());
-            std::cout << remaining << ' ';
-            input = cmd + ' ';
-            return true;
-        }
-    }
-
-    // Check executables in PATH
-    auto matches = findMatchingExecutables(input);
-    if (matches.size() == 1) {
-        std::string remain = matches[0].substr(input.size());
-        std::cout << remain << ' ';
-
-        input = matches[0] + " ";
-        return true;
-    }
-    std::cout << '\a';
-
-    return false;
-}
-
-
 std::vector<std::string> findMatchingExecutables(const std::string &prefix) {
     std::vector<std::string> matches;
 
@@ -275,6 +242,41 @@ std::vector<std::string> findMatchingExecutables(const std::string &prefix) {
     }
     return matches;
 }
+
+
+bool autocomplete(std::string &input) {
+    static const std::vector<std::string> builtins = {
+        "echo",
+        "exit"
+    };
+
+
+    // Check builtins
+    for (const auto &cmd : builtins) {
+        if (cmd.starts_with(input)) {
+            std::string remaining = cmd.substr(input.size());
+            std::cout << remaining << ' ';
+            input = cmd + ' ';
+            return true;
+        }
+    }
+
+    // Check executables in PATH
+    auto matches = findMatchingExecutables(input);
+    if (matches.size() == 1) {
+        std::string remain = matches[0].substr(input.size());
+        std::cout << remain << ' ';
+
+        input = matches[0] + " ";
+        return true;
+    }
+    std::cout << '\a';
+
+    return false;
+}
+
+
+
 
 
 
