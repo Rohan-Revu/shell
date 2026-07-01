@@ -224,12 +224,14 @@ int main() {
     bool redirectStdout = false;
     bool redirectStderr = false;
     bool appendStdout = false;
+    bool appendStderr = false;
 
     for (size_t i = 0; i < args.size(); i++) {
       if (args[i] == ">" || args[i] == "1>") {
         
         if(i+1 < args.size()){
           redirectStdout = true;
+          appendStdout = false;
           outputFile = args[i + 1];
 
           args.erase(args.begin() + i, args.begin() + i + 2);
@@ -253,12 +255,23 @@ int main() {
 
         if(i+1 < args.size()){
           redirectStderr = true;
+          appendStderr = false;
           outputFile = args[i + 1];
 
           args.erase(args.begin() + i, args.begin() + i + 2);
           break;
         }
 
+      }
+      else if(args[i] == "2>>"){
+        if(i+1 < args.size()){
+          redirectStderr = true;
+          appendStderr = true;
+          outputFile = args[i + 1];
+
+          args.erase(args.begin() + i, args.begin() + i + 2);
+          break;
+        }
       }
     }
 
@@ -280,7 +293,13 @@ int main() {
 
     int savedStderr = -1;
     if (redirectStderr) {
-        int flags = O_WRONLY | O_CREAT | O_TRUNC;
+        int flags = O_WRONLY | O_CREAT;
+        
+        if (appendStderr) {
+            flags |= O_APPEND;
+        } else {
+            flags |= O_TRUNC;
+        }
         int fd = open(outputFile.c_str(), flags, 0644);
 
         savedStderr = dup(STDERR_FILENO);
