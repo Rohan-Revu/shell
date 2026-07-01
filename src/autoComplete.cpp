@@ -93,9 +93,16 @@ std::string longestCommonPrefix(const std::vector<std::string>& matches) {
 
 std::vector<std::string> getFileCompletions(const std::string& prefix)
 {
+    size_t slashPos = prefix.find_last_of('/');
+
+    directory = prefix.substr(0, slashPos + 1);    
+    filePrefix = prefix.substr(slashPos + 1);
+
+
+    
     std::vector<std::string> matches;
 
-    DIR* dp = opendir(".");
+    DIR* dp = opendir(directory.c_str());
 
     if (dp == nullptr)
         return matches;
@@ -106,7 +113,7 @@ std::vector<std::string> getFileCompletions(const std::string& prefix)
     {
         std::string file = entry->d_name;
 
-        if (file.starts_with(prefix))
+        if(file.starts_with(filePrefix))
             matches.push_back(file);
     }
 
