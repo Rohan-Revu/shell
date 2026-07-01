@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <dirent.h>
 
 
 
@@ -213,6 +214,8 @@ bool autocomplete(std::string &input) {
         "exit"
     };
 
+
+    // Check builtins
     for (const auto &cmd : builtins) {
         if (cmd.starts_with(input)) {
             std::string remaining = cmd.substr(input.size());
@@ -221,9 +224,56 @@ bool autocomplete(std::string &input) {
             return true;
         }
     }
+
+    // Check executables in PATH
+    auto matches = findMatchingExecutables(input);
+    if (matches.size() == 1) {
+        std::string remain = matches[0].substr(input.size());
+        std::cout << remain << ' ';
+
+        input = matches[0] + " ";
+        return true;
+    }
     std::cout << '\a';
 
     return false;
+}
+
+
+std::vector<std::string> findMatchingExecutables(const std::string &prefix) {
+    std::vector<std::string> matches;
+
+    const char* pathEnv = getenv("PATH");
+    if (!pathEnv)
+        return matches;
+
+    std::stringstream ss(pathEnv);
+    std::string dir;
+
+    while (getline(ss, dir, ':')) {
+
+        DIR* dp = opendir(dir.c_str());
+
+        if (dp == nullptr)
+            continue;
+
+        struct dirent* entry;
+
+        while ((entry = readdir(dp)) != nullptr) {
+            std::string file = entry->d_name;
+
+            if (!file.starts_with(prefix))
+                continue;
+
+            std::string fullPath = dir + "/" + file;
+
+            if (access(fullPath.c_str(), X_OK) == 0) {
+                matches.push_back(file);
+            }
+        }
+        closedir(dp);
+    }
+    return matches;
 }
 
 
