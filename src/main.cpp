@@ -273,7 +273,24 @@ std::vector<std::string> getCompletions(const std::string &prefix) {
     return matches;
 }
 
+std::string longestCommonPrefix(const std::vector<std::string>& matches) {
+    if (matches.empty())
+        return "";
 
+    std::string prefix = matches[0];
+
+    for (size_t i = 1; i < matches.size(); i++) {
+
+        while (!matches[i].starts_with(prefix)) {
+            prefix.pop_back();
+
+            if (prefix.empty())
+                return "";
+        }
+    }
+
+    return prefix;
+}
 
 
 
@@ -300,11 +317,11 @@ int main() {
     bool lastWasTab = false;
 
     while (true) {
-        if (read(STDIN_FILENO, &c, 1) <= 0)
-            break;
-
+      if (read(STDIN_FILENO, &c, 1) <= 0)
+          break;
+       
         if (c == '\n'){
-            std::cout << std::endl;
+          std::cout << std::endl;
             break;
         }
         if (c == '\t') {
@@ -321,19 +338,31 @@ int main() {
                 lastWasTab = false;
             }
             else {
-                if (!lastWasTab) {
-                    std::cout << '\a';
-                    lastWasTab = true;
-                }
-                else {
-                    std::cout << '\n';
-                    for (const auto &m : matches)
-                        std::cout << m << "  ";
-                    std::cout << "\n$ " << input;
-                    lastWasTab = false;
-                }
-            }
-            continue;
+              std::string lcp = longestCommonPrefix(matches);
+              if (lcp.size() > input.size()) {
+                  std::string remain = lcp.substr(input.size());
+                  std::cout << remain;
+                  input = lcp;
+                  lastWasTab = false;
+              }
+              else {
+                  if (!lastWasTab) {
+                      std::cout << '\a';
+                      lastWasTab = true;
+                  }
+                  else {
+                      std::cout << '\n';
+
+                      for (const auto &m : matches)
+                          std::cout << m << "  ";
+
+                      std::cout << "\n$ " << input;
+
+                      lastWasTab = false;
+                  }
+              }
+          }
+          continue;
         }
 
         input += c;
