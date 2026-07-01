@@ -251,10 +251,10 @@ int main() {
         if (read(STDIN_FILENO, &c, 1) <= 0)
             break;
 
-        if (c == '\n')
+        if (c == '\n'){
             std::cout << std::endl;
             break;
-
+        }
         if (c == '\t') {
             autocomplete(input);
             continue;
