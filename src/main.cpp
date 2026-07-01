@@ -221,6 +221,7 @@ bool autocomplete(std::string &input) {
             return true;
         }
     }
+    std::cout << '\a';
 
     return false;
 }
