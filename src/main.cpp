@@ -240,21 +240,23 @@ int main() {
     char c;
 
     while (true) {
-       if (read(STDIN_FILENO, &c, 1) <= 0)
-        break;
+        if (read(STDIN_FILENO, &c, 1) <= 0)
+            break;
 
-      if (c == '\n') {
-          break;
-      }
-      if (c == '\t') {
-        autocomplete(input);
-        continue;
-      }
-      input += c;
-      std::cout << c;
+        std::cerr << "ASCII: " << (int)c << '\n';
+
+        if (c == '\n')
+            break;
+
+        if (c == '\t') {
+            std::cerr << "TAB DETECTED\n";
+            autocomplete(input);
+            continue;
+        }
+
+        input += c;
+        std::cout << c;
     }
-
-
     std::vector<std::string> args = parseArguments(input);
     std::string outputFile;
     bool redirectStdout = false;
