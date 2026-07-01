@@ -107,7 +107,7 @@ std::vector<std::string> parseArguments(const std::string &input) {
         char c = input[i];
 
 
-        if(c=='\\' && !insingleQuote){ 
+        if(c=='\\' && !inSingleQuote){ 
           if(i + 1 < input.size()){
             current += input[i + 1];
             i++;
