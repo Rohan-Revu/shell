@@ -154,7 +154,7 @@ int main() {
     // Read line
     std::string input;
     std::getline(std::cin, input);
-
+    std::cerr << "INPUT: [" << input << "]\n";
 
     std::vector<std::string> args = parseArguments(input);
     std::string outputFile;
