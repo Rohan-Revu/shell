@@ -6,6 +6,7 @@
 #include <vector>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <termios.h>
 
 
 std::string findExecutable(const std::string &command) {
