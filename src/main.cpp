@@ -244,35 +244,33 @@ std::vector<std::string> findMatchingExecutables(const std::string &prefix) {
 }
 
 
-bool autocomplete(std::string &input) {
+std::vector<std::string> getCompletions(const std::string &prefix) {
+
+    std::vector<std::string> matches;
+
     static const std::vector<std::string> builtins = {
         "echo",
-        "exit"
+        "exit",
+        "type",
+        "pwd",
+        "cd"
     };
 
-
-    // Check builtins
+    // Builtins
     for (const auto &cmd : builtins) {
-        if (cmd.starts_with(input)) {
-            std::string remaining = cmd.substr(input.size());
-            std::cout << remaining << ' ';
-            input = cmd + ' ';
-            return true;
-        }
+        if (cmd.starts_with(prefix))
+            matches.push_back(cmd);
     }
 
-    // Check executables in PATH
-    auto matches = findMatchingExecutables(input);
-    if (matches.size() == 1) {
-        std::string remain = matches[0].substr(input.size());
-        std::cout << remain << ' ';
+    // Executables
+    auto execs = findMatchingExecutables(prefix);
 
-        input = matches[0] + " ";
-        return true;
-    }
-    std::cout << '\a';
+    matches.insert(matches.end(), execs.begin(), execs.end());
+    std::sort(matches.begin(), matches.end());
 
-    return false;
+    matches.erase(std::unique(matches.begin(),matches.end()), matches.end());
+
+    return matches;
 }
 
 
@@ -299,6 +297,7 @@ int main() {
     // Read line
     std::string input;
     char c;
+    bool lastWasTab = false;
 
     while (true) {
         if (read(STDIN_FILENO, &c, 1) <= 0)
@@ -309,12 +308,37 @@ int main() {
             break;
         }
         if (c == '\t') {
-            autocomplete(input);
+
+            auto matches = getCompletions(input);
+
+            if (matches.empty()) {
+                std::cout << '\a';
+            }
+            else if (matches.size() == 1) {
+                std::string remain = matches[0].substr(input.size());
+                std::cout << remain << ' ';
+                input = matches[0] + ' ';
+                lastWasTab = false;
+            }
+            else {
+                if (!lastWasTab) {
+                    std::cout << '\a';
+                    lastWasTab = true;
+                }
+                else {
+                    std::cout << '\n';
+                    for (const auto &m : matches)
+                        std::cout << m << "  ";
+                    std::cout << "\n$ " << input;
+                    lastWasTab = false;
+                }
+            }
             continue;
         }
 
         input += c;
         std::cout << c;
+        lastWasTab = false;
     }
     std::vector<std::string> args = parseArguments(input);
     std::string outputFile;
