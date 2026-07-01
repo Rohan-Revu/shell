@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <vector>
 #include <sys/wait.h>
+#include <fcntl.h>
 
 
 std::string findExecutable(const std::string &command) {
@@ -152,9 +153,40 @@ int main() {
 
 
     std::vector<std::string> args = parseArguments(input);
-    if (args.empty()) {
-      continue;
+    std::string outputFile;
+    bool redirect = false;
+
+    for (size_t i = 0; i < args.size(); i++) {
+      if (args[i] == ">" || args[i] == "1>") {
+        
+        if(i+1 < args.size()){
+          redirect = true;
+          outputFile = args[i + 1];
+
+          args.erase(args.begin() + i, args.begin() + i + 2);
+          break;
+        }
+        
+      }
     }
+
+    int savedStdout = -1;
+    if (redirect) {
+        int fd = open(outputFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+        savedStdout = dup(STDOUT_FILENO);
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+    }
+
+    if (args.empty()) {
+    if (redirect) {
+        std::cout.flush();
+        dup2(savedStdout, STDOUT_FILENO);
+        close(savedStdout);
+    }
+    continue;
+}
     std::string command = args[0];
 
 
@@ -182,6 +214,12 @@ int main() {
         executeProgram(path, args);
       }
     }
-    
+    if (redirect) {
+    std::cout.flush();
+
+    dup2(savedStdout, STDOUT_FILENO);
+    close(savedStdout);
+  }
+
   }
 }
