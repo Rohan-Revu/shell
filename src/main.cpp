@@ -204,24 +204,15 @@ int main() {
     
 
     if (args.empty()) {
-      if(redirectStdout) {
-          std::cout.flush();
-          dup2(savedStdout, STDOUT_FILENO);
-          close(savedStdout);
-      }
-      if(redirectStderr){
-        std::cerr.flush();
-        dup2(savedStderr, STDERR_FILENO);
-        close(savedStderr);
-      }
       continue;
     }
 
 
     std::string command = args[0];
 
+    bool shouldExit = false;
     if(command == "exit"){
-      break;
+      shouldExit = true;
     }
     else if(command == "echo"){
       echoCommand(args);
@@ -243,6 +234,21 @@ int main() {
       else{
         executeProgram(path, args);
       }
+    }
+    if (redirectStdout) {
+      std::cout.flush();
+      dup2(savedStdout, STDOUT_FILENO);
+      close(savedStdout);
+    }
+
+    if (redirectStderr) {
+      std::cerr.flush();
+      dup2(savedStderr, STDERR_FILENO);
+      close(savedStderr);
+    }
+
+    if (shouldExit) {
+      break;
     }
   }
 }
