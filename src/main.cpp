@@ -251,13 +251,10 @@ int main() {
         if (read(STDIN_FILENO, &c, 1) <= 0)
             break;
 
-        std::cerr << "ASCII: " << (int)c << '\n';
-
         if (c == '\n')
             break;
 
         if (c == '\t') {
-            std::cerr << "TAB DETECTED\n";
             autocomplete(input);
             continue;
         }
