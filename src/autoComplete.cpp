@@ -120,6 +120,9 @@ std::vector<std::string> getFileCompletions(const std::string& prefix)
     {
         std::string file = entry->d_name;
 
+         if (file == "." || file == "..")
+            continue;
+
         if (file.starts_with(filePrefix))
         {
             if (directory == ".")
