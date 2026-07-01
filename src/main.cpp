@@ -204,10 +204,15 @@ int main() {
     
 
     if (args.empty()) {
-      if (redirectStdout || redirectStderr) {
+      if(redirectStdout) {
           std::cout.flush();
           dup2(savedStdout, STDOUT_FILENO);
           close(savedStdout);
+      }
+      if(redirectStderr){
+        std::cerr.flush();
+        dup2(savedStderr, STDERR_FILENO);
+        close(savedStderr);
       }
       continue;
     }
