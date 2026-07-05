@@ -40,7 +40,8 @@ void typeCommand(const std::string &cmd) {
         "exit",
         "type",
         "pwd",
-        "cd"
+        "cd",
+        "complete"
     };
 
     if (builtins.contains(cmd)) {
