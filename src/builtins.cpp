@@ -59,9 +59,6 @@ void typeCommand(const std::string &cmd) {
         std::cout << cmd << ": not found" << std::endl;
 }
 
-
-
-static std::unordered_map<std::string, std::string> completions;
 void completeCommand(const std::vector<std::string> &args){
 
   if(args.size() >= 4){
