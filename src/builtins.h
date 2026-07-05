@@ -10,3 +10,5 @@ void pwdCommand();
 void cdCommand(std::string directory);
 
 void typeCommand(const std::string &cmd);
+
+void completeCommand(const std::vector<std::string> &args);

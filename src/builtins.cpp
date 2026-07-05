@@ -56,3 +56,11 @@ void typeCommand(const std::string &cmd) {
     else
         std::cout << cmd << ": not found" << std::endl;
 }
+
+void completeCommand(const std::vector<std::string> &args){
+  if(args.size() >= 3){
+    if(args[1] == "-p"){
+      std::cout << "complete: " << args[2] << ": no completion specification" << std::endl;
+    }
+  }
+}
