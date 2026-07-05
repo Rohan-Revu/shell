@@ -68,7 +68,7 @@ void completeCommand(const std::vector<std::string> &args){
     if(args[1] == "-p"){
       auto it = completions.find(args[2]);
       if(it != completions.end()){
-        std::cout << "complete -C '" << it->second << "'" << args[2] << std::endl;
+        std::cout << "complete -C '" << it->second << "' " << args[2] << std::endl;
       }
       else{
         std::cout << "complete: " << args[2] << ": no completion specification" << std::endl;
