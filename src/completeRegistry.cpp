@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <sstream>
+#include <unistd.h>
+#include <sys/wait.h>
 
 static std::unordered_map<std::string, std::string> completions;
 
