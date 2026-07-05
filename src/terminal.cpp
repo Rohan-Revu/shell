@@ -1,9 +1,11 @@
 #include "terminal.h"
 #include "autoComplete.h"
+#include "completeRegistry.h"
 
 #include <iostream>
 #include <unistd.h>
 #include <termios.h>
+
 
 void initializeTerminal(){
     termios orig_termios;
