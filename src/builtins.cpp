@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unordered_set>
 #include <unistd.h>
+#include <unordered_map>
 
 
 void echoCommand(const std::vector<std::string> &args){
@@ -58,9 +59,20 @@ void typeCommand(const std::string &cmd) {
 }
 
 void completeCommand(const std::vector<std::string> &args){
+  static std::unordered_map<std::string, std::string> completions;
   if(args.size() >= 3){
+    if(args[1] == "-C"){
+      completions[args[3]] = args[2];
+    }
+
     if(args[1] == "-p"){
-      std::cout << "complete: " << args[2] << ": no completion specification" << std::endl;
+      auto it = completions.find(args[2]);
+      if(it != completions.end()){
+        std::cout << "complete -C '" << it->second << "'" << args[2] << std::endl;
+      }
+      else{
+        std::cout << "complete: " << args[2] << ": no completion specification" << std::endl;
+      }
     }
   }
 }
