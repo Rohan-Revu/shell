@@ -51,20 +51,53 @@ std::string readCommand(){
                 prefix = input;
                 matches = getCompletions(prefix);
             }
-            else
+           else
             {
-                
                 prefix = input.substr(pos + 1);
 
-                std::string command = input.substr(0, pos);
+                // Parse the whole command line
+                std::vector<std::string> words = parseArguments(input);
+
+                std::string command = words[0];
+
+                // Does the input end with a space?
+                bool endsWithSpace = !input.empty() && input.back() == ' ';
+
+                // Current word being completed
+                std::string currentWord;
+
+                if (endsWithSpace)
+                    currentWord = "";
+                else
+                    currentWord = words.back();
+
+                // Previous word
+                std::string previousWord;
+
+                if (endsWithSpace)
+                {
+                    if (words.size() >= 2)
+                        previousWord = words.back();
+                    else
+                        previousWord = "";
+                }
+                else
+                {
+                    if (words.size() >= 3)
+                        previousWord = words[words.size() - 2];
+                    else
+                        previousWord = "";
+                }
 
                 if (!getCompleter(command).empty())
-                    // Completing command
-                    matches = runCompleter(command);
+                {
+                    matches = runCompleter(command, currentWord, previousWord);
+                }
                 else
-                    // Completing filename
+                {
                     matches = getFileCompletions(prefix);
                 }
+            }
 
             if (matches.empty()) {
                 std::cout << '\a';
