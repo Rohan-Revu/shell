@@ -1,5 +1,6 @@
 #include "builtins.h"
 #include "executeProgram.h"
+#include <completeRegistry.h>
 
 #include <iostream>
 #include <unordered_set>
@@ -58,16 +59,21 @@ void typeCommand(const std::string &cmd) {
         std::cout << cmd << ": not found" << std::endl;
 }
 
-void completeCommand(const std::vector<std::string> &args){
-  static std::unordered_map<std::string, std::string> completions;
-  if(args.size() >= 3){
-    if(args[1] == "-C"){
-      completions[args[3]] = args[2];
-    }
 
+
+static std::unordered_map<std::string, std::string> completions;
+void completeCommand(const std::vector<std::string> &args){
+
+  if(args.size() >= 4){
+    if(args[1] == "-C"){
+      registerCompleter(args[3], args[2]);
+    }
+  }
+  if(args.size() >= 3){
     if(args[1] == "-p"){
-      auto it = completions.find(args[2]);
-      if(it != completions.end()){
+      std::string completer = getCompleter(args[2]);
+
+      if(!completer.empty()){
         std::cout << "complete -C '" << it->second << "' " << args[2] << std::endl;
       }
       else{

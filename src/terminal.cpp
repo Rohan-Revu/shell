@@ -51,10 +51,18 @@ std::string readCommand(){
             }
             else
             {
-                // Completing filename
+                
                 prefix = input.substr(pos + 1);
-                matches = getFileCompletions(prefix);
-            }
+
+                std::string command = input.substr(0, pos);
+
+                if (!getCompleter(command).empty())
+                    // Completing command
+                    matches = runCompleter(command);
+                else
+                    // Completing filename
+                    matches = getFileCompletions(prefix);
+                }
 
             if (matches.empty()) {
                 std::cout << '\a';

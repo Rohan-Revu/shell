@@ -54,6 +54,7 @@ std::vector<std::string> getCompletions(const std::string &prefix) {
         "type",
         "pwd",
         "cd"
+        "complete"
     };
 
     // Builtins
