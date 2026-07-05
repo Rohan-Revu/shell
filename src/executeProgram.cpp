@@ -41,13 +41,9 @@ void executeProgram(const std::string &path, const std::vector<std::string> &arg
 
 
   if(pid == 0){
-    execl(script.c_str(),
-      script.c_str(),
-      command.c_str(),
-      currentWord.c_str(),
-      previousWord.c_str(),
-      nullptr);
-    perror("execl");
+    execv(path.c_str(), argv.data());
+
+    perror("execv");
     exit(1);
   }
   else{

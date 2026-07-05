@@ -25,7 +25,7 @@ std::string getCompleter(const std::string& command){
 
 }
 
-std::vector<std::string> runCompleter(const std::string& command){
+std::vector<std::string> runCompleter(const std::string& command, const std::string& currentWord, const std::string& previousWord){
      std::vector<std::string> result;
 
     std::string script = getCompleter(command);
@@ -53,7 +53,12 @@ std::vector<std::string> runCompleter(const std::string& command){
         close(pipefd[0]);
         close(pipefd[1]);
 
-        execl(script.c_str(), script.c_str(), nullptr);
+        execl(script.c_str(),
+              script.c_str(),
+              command.c_str(),
+              currentWord.c_str(),
+              previousWord.c_str(),
+      nullptr);
 
         exit(1);
     }
