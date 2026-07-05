@@ -74,7 +74,7 @@ void completeCommand(const std::vector<std::string> &args){
       std::string completer = getCompleter(args[2]);
 
       if(!completer.empty()){
-        std::cout << "complete -C '" << it->second << "' " << args[2] << std::endl;
+        std::cout << "complete -C '" << completer << "' " << args[2] << std::endl;
       }
       else{
         std::cout << "complete: " << args[2] << ": no completion specification" << std::endl;
