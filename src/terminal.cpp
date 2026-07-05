@@ -1,6 +1,7 @@
 #include "terminal.h"
 #include "autoComplete.h"
 #include "completeRegistry.h"
+#include "parser.h"
 
 #include <iostream>
 #include <unistd.h>
