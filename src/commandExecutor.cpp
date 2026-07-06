@@ -39,6 +39,11 @@ bool executeCommand(const std::vector<std::string>& args)
         return false;
     }
 
+    if(command == "job"){
+        jobCommand();
+        return false;
+    }
+
     std::string path = findExecutable(command);
 
     if(path.empty()){
