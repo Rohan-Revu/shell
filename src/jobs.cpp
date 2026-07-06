@@ -37,4 +37,11 @@ void printJobs(){
         else
             std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << job.status << job.command.substr(0, job.command.size() - 2) << std::endl;
     }
+
+    jobs.erase(std::remove_if( jobs.begin(), jobs.end(),
+        [](const Job& job)
+        {
+            return job.status == "Done";
+        }),
+    jobs.end());
 }
