@@ -4,11 +4,18 @@
 #include <vector>
 #include <sys/types.h>
 
-struct Job {
+enum class JobStatus
+{
+    Running,
+    Done
+};
+
+struct Job
+{
     int jobNumber;
     pid_t pid;
     std::string command;
-    std::string status;
+    JobStatus status;
 };
 
 int addJob(pid_t pid, const std::string& command);

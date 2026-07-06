@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <sys/wait.h>
+
 #include "jobs.h"
 
 static std::vector<Job> jobs;
@@ -12,8 +14,15 @@ int addJob(pid_t pid, const std::string& command){
 }
 
 void printJobs(){
-    for (size_t i = 0; i < jobs.size(); i++)
+    for (auto& job : jobs)
     {
+        int status;
+        pid_t result = waitpid(job.pid, &status, WNOHANG);
+        if (result == job.pid && WIFEXITED(status)){
+            job.status = "Done";
+        }
+    }
+    for (size_t i = 0; i < jobs.size(); i++){
         char marker = ' ';
 
         if (i == jobs.size() - 1)
@@ -21,6 +30,11 @@ void printJobs(){
         else if (jobs.size() >= 2 && i == jobs.size() - 2)
             marker = '-';
 
-        std::cout << "[" << jobs[i].jobNumber << "]" << marker << "  " << std::left << std::setw(24) << jobs[i].status << jobs[i].command << std::endl;
+        
+
+        if (job.status == "Running")
+            std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << job.status << job.command << std::endl;
+        else
+            std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << job.status << job.command.substr(0, job.command.size() - 2) << std::endl;
     }
 }
