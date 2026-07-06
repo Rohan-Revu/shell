@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-bool executeCommand(const std::vector<std::string>& args, bool background, const std::string& command)
+bool executeCommand(const std::vector<std::string>& args, bool background, const std::string& commandLine)
 {
     std::string command = args[0];
 
@@ -51,7 +51,7 @@ bool executeCommand(const std::vector<std::string>& args, bool background, const
     }
     else{
         
-        executeProgram(path, args, background, command);
+        executeProgram(path, args, background, commandLine);
     }
 
     return false;
