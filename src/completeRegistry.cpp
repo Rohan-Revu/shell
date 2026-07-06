@@ -93,5 +93,7 @@ std::vector<std::string> runCompleter(const std::string& command, const std::str
     //close the read end of the pipe
     close(pipefd[0]);
 
+
+    std::sort(result.begin(), result.end());
     return result;
 }
