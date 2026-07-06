@@ -97,3 +97,7 @@ std::vector<std::string> runCompleter(const std::string& command, const std::str
     std::sort(result.begin(), result.end());
     return result;
 }
+
+void unregisterCompleter(const std::string& command){
+    completions.erase(command);
+}

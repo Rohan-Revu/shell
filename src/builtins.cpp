@@ -80,7 +80,7 @@ void completeCommand(const std::vector<std::string> &args){
   }
   if(args.size() >= 2){
     if(args[1] == "-r"){
-      registerCompleter(args[2], "");
+      unregisterCompleter(args[2]);
     }
   }
 }
