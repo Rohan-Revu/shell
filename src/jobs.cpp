@@ -9,10 +9,15 @@
 static std::vector<Job> jobs;
 static int nextJobNumber = 1;
 
-int addJob(pid_t pid, const std::string& command)
-{
-    jobs.push_back({nextJobNumber++, pid, command, JobStatus::Running});
-    return jobs.back().jobNumber;
+int addJob(pid_t pid, const std::string& command){
+    int jobNumber = 1;
+    if (!jobs.empty()){
+        jobNumber = jobs.back().jobNumber + 1;
+    }
+
+    jobs.push_back({ jobNumber, pid, command, JobStatus::Running });
+
+    return jobNumber;
 }
 
 
@@ -52,7 +57,6 @@ void printJobs()
     for (size_t i = 0; i < jobs.size(); i++)
     {
         auto& job = jobs[i];
-
         char marker = ' ';
 
         if (i == jobs.size() - 1)
@@ -84,8 +88,7 @@ void printJobs()
     removeDoneJobs();
 }
 
-void reapJobs()
-{
+void reapJobs(){
     updateJobStatus();
 
     for (size_t i = 0; i < jobs.size(); i++)
@@ -110,13 +113,7 @@ void reapJobs()
             command.erase(command.size() - 2);
         }
 
-        std::cout << "[" << job.jobNumber << "]"
-                  << marker << "  "
-                  << std::left
-                  << std::setw(24)
-                  << "Done"
-                  << command
-                  << std::endl;
+        std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << "Done" << command << std::endl;
     }
 
     removeDoneJobs();
