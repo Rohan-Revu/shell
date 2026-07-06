@@ -93,9 +93,6 @@ std::string readCommand(){
                 if (!getCompleter(command).empty())
                 {
                     matches = runCompleter(command, currentWord, previousWord, input);
-                    std::cerr << "matches = " << matches.size() << '\n';
-                    for (const auto& m : matches)
-                        std::cerr << m << '\n';
                 }
                 else
                 {
