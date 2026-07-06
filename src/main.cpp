@@ -37,7 +37,7 @@ int main() {
             continue;
         }
 
-        if (executeCommand(command.args, command.background)) {
+        if (executeCommand(command.args, command.background, input)) {
             restoreRedirection(redir);
             break;
         }

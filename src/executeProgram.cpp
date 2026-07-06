@@ -28,7 +28,7 @@ std::string findExecutable(const std::string &command) {
 
 
 
-void executeProgram(const std::string &path, const std::vector<std::string> &args, bool background) {
+void executeProgram(const std::string &path, const std::vector<std::string> &args, bool background, const std::string& commandLine) {
   std::vector<char*> argv;
 
   static int nextJobNumber = 1;
@@ -53,6 +53,7 @@ void executeProgram(const std::string &path, const std::vector<std::string> &arg
   {
       if(background)
       {
+          int jobNumber = addJob(pid, commandLine);
           std::cout << "[" << nextJobNumber++ << "] "<< pid << std::endl;
       }
       else

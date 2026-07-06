@@ -1,6 +1,7 @@
 #include "builtins.h"
 #include "executeProgram.h"
 #include "completeRegistry.h"
+#include "jobs.h"
 
 #include <iostream>
 #include <unordered_set>
@@ -87,5 +88,5 @@ void completeCommand(const std::vector<std::string> &args){
 }
 
 void jobCommand() {
-    return;
+    printJobs();
 }
