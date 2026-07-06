@@ -39,7 +39,7 @@ bool executeCommand(const std::vector<std::string>& args)
         return false;
     }
 
-    if(command == "job"){
+    if(command == "jobs"){
         jobCommand();
         return false;
     }

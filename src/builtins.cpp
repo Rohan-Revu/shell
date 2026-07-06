@@ -44,7 +44,7 @@ void typeCommand(const std::string &cmd) {
         "pwd",
         "cd",
         "complete",
-        "job"
+        "jobs"
     };
 
     if (builtins.contains(cmd)) {
@@ -87,5 +87,5 @@ void completeCommand(const std::vector<std::string> &args){
 }
 
 void jobCommand() {
-    
+    return;
 }
