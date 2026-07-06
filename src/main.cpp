@@ -21,6 +21,7 @@ int main() {
     std::cerr << std::unitbuf;
 
     while (true) {
+        reapJobs();
 
         std::cout << "$ ";
 

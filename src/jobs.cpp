@@ -15,17 +15,8 @@ int addJob(pid_t pid, const std::string& command)
     return jobs.back().jobNumber;
 }
 
-void printJobs() {
-    for (auto& job : jobs){
-        int status;
-        pid_t result = waitpid(job.pid, &status, WNOHANG);
-
-        if (result == job.pid && WIFEXITED(status))
-        {
-            job.status = JobStatus::Done;
-        }
-    }
-
+void printJobs()
+{
     for (size_t i = 0; i < jobs.size(); i++){
         auto& job = jobs[i];
 
@@ -36,25 +27,39 @@ void printJobs() {
         else if (jobs.size() >= 2 && i == jobs.size() - 2)
             marker = '-';
 
-        std::cout << "[" << job.jobNumber << "]"
-                  << marker << "  ";
-
-        if (job.status == JobStatus::Running){
-            std::cout << std::left << std::setw(24) << "Running" << job.command;
-        }
-        else{
-            std::string command = job.command;
-
-            if (command.size() >= 2 && command.substr(command.size() - 2) == " &") {
-                command.erase(command.size() - 2);
-            }
-
-            std::cout << std::left << std::setw(24) << "Done" << command;
-        }
-        std::cout << std::endl;
+        std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << "Running" << job.command << std::endl;
     }
+}
 
-    // Remove completed jobs
+void reapJobs(){
+    for (auto& job : jobs){
+        int status;
+        pid_t result = waitpid(job.pid, &status, WNOHANG);
+
+        if (result == job.pid && WIFEXITED(status))
+        {
+            job.status = JobStatus::Done;
+        }
+    }
+    for (size_t i = 0; i < jobs.size(); i++){
+        if (jobs[i].status != JobStatus::Done)
+            continue;
+
+        char marker = ' ';
+
+        if (i == jobs.size() - 1)
+            marker = '+';
+        else if (jobs.size() >= 2 && i == jobs.size() - 2)
+            marker = '-';
+
+        std::string command = jobs[i].command;
+
+        if (command.size() >= 2 && command.substr(command.size() - 2) == " &") {
+            command.erase(command.size() - 2);
+        }
+
+        std::cout << "[" << jobs[i].jobNumber << "]" << marker << "  " << std::left << std::setw(24) << "Done" << command << std::endl;
+    }
     jobs.erase(
         std::remove_if(
             jobs.begin(),
