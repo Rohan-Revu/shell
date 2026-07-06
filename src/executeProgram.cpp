@@ -1,4 +1,5 @@
 #include "executeProgram.h"
+#include "jobs.h"
 
 #include <unistd.h>
 #include <sys/wait.h>
