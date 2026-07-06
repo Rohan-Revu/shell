@@ -53,7 +53,7 @@ void executeProgram(const std::string &path, const std::vector<std::string> &arg
   {
       if(background)
       {
-          std::cout << "[" << nextJobNumber << "] "<< pid << std::endl;
+          std::cout << "[" << nextJobNumber++ << "] "<< pid << std::endl;
       }
       else
       {
