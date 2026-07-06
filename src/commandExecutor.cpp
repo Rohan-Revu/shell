@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-bool executeCommand(const std::vector<std::string>& args, bool background)
+bool executeCommand(const std::vector<std::string>& args, bool background, const std::string& command)
 {
     std::string command = args[0];
 
