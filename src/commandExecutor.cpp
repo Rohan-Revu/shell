@@ -51,7 +51,7 @@ bool executeCommand(const std::vector<std::string>& args, bool background)
     }
     else{
         
-        executeProgram(path, args, background, commandLine);
+        executeProgram(path, args, background, command);
     }
 
     return false;
