@@ -50,6 +50,7 @@ bool executeCommand(const std::vector<std::string>& args)
         std::cout << command << ": not found" << std::endl;
     }
     else{
+        
         executeProgram(path, args);
     }
 

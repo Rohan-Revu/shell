@@ -26,18 +26,18 @@ int main() {
 
         std::string input = readCommand();
 
-        auto args = parseArguments(input);
+        ParsedCommand command = parseCommand(input);
 
-        Redirection redir = parseRedirection(args);
+        Redirection redir = parseRedirection(command.args);
 
         setupRedirection(redir);
 
-        if (args.empty()) {
+        if (command.args.empty()) {
             restoreRedirection(redir);
             continue;
         }
 
-        if (executeCommand(args)) {
+        if (executeCommand(command.args)) {
             restoreRedirection(redir);
             break;
         }

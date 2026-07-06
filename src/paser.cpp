@@ -110,3 +110,18 @@ std::vector<std::string> parseArguments(const std::string &input) {
 
     return args;
 }
+
+ParsedCommand parseCommand(const std::string& input)
+{
+    ParsedCommand cmd;
+
+    cmd.args = parseArguments(input);
+
+    if (!cmd.args.empty() && cmd.args.back() == "&")
+    {
+        cmd.background = true;
+        cmd.args.pop_back();
+    }
+
+    return cmd;
+}
