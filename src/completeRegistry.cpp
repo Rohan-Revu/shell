@@ -25,7 +25,7 @@ std::string getCompleter(const std::string& command){
 
 }
 
-std::vector<std::string> runCompleter(const std::string& command, const std::string& currentWord, const std::string& previousWord){
+std::vector<std::string> runCompleter(const std::string& command, const std::string& currentWord, const std::string& previousWord, const std::string& commandLine){
      std::vector<std::string> result;
 
     std::string script = getCompleter(command);
@@ -44,6 +44,12 @@ std::vector<std::string> runCompleter(const std::string& command, const std::str
 
     if (pid == -1)
         return result;
+
+    int compPoint = commandLine.size();
+    setenv("COMP_LINE", commandLine.c_str(), 1);
+
+    std::string point = std::to_string(commandLine.size());
+    setenv("COMP_POINT", point.c_str(), 1);
 
     // In the child process, redirect stdout to the pipe and execute the script
     if (pid == 0)

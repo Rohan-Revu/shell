@@ -92,7 +92,7 @@ std::string readCommand(){
 
                 if (!getCompleter(command).empty())
                 {
-                    matches = runCompleter(command, currentWord, previousWord);
+                    matches = runCompleter(command, currentWord, previousWord, input);
                 }
                 else
                 {
