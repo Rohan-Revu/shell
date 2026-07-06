@@ -1,5 +1,7 @@
 #include <iostream>
 #include <iomanip>
+#include <vector>
+#include "jobs.h"
 
 static std::vector<Job> jobs;
 static int nextJobNumber = 1;
