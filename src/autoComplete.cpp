@@ -53,7 +53,7 @@ std::vector<std::string> getCompletions(const std::string &prefix) {
         "exit",
         "type",
         "pwd",
-        "cd"
+        "cd",
         "complete"
     };
 
