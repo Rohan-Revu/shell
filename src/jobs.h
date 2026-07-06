@@ -19,7 +19,5 @@ struct Job
 };
 
 int addJob(pid_t pid, const std::string& command);
-void updateJobStatus();
-void removeDoneJobs();
 void printJobs();
 void reapJobs();
