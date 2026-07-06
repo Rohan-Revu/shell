@@ -1,28 +1,36 @@
+#include "jobs.h"
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include <sys/wait.h>
-
-#include "jobs.h"
 
 static std::vector<Job> jobs;
 static int nextJobNumber = 1;
 
-int addJob(pid_t pid, const std::string& command){
-    jobs.push_back({ nextJobNumber++, pid, command, "Running" });
+int addJob(pid_t pid, const std::string& command)
+{
+    jobs.push_back({nextJobNumber++, pid, command, "Running"});
     return jobs.back().jobNumber;
 }
 
-void printJobs(){
-    for (auto& job : jobs)
-    {
+void printJobs()
+{
+    for (auto& job : jobs){
         int status;
         pid_t result = waitpid(job.pid, &status, WNOHANG);
-        if (result == job.pid && WIFEXITED(status)){
+
+        if (result == job.pid && WIFEXITED(status))
+        {
             job.status = "Done";
         }
     }
-    for (size_t i = 0; i < jobs.size(); i++){
+
+
+    for (size_t i = 0; i < jobs.size(); i++)
+    {
+        auto& job = jobs[i];
         char marker = ' ';
 
         if (i == jobs.size() - 1)
@@ -30,18 +38,35 @@ void printJobs(){
         else if (jobs.size() >= 2 && i == jobs.size() - 2)
             marker = '-';
 
-        
+        std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << job.status;
 
         if (job.status == "Running")
-            std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << job.status << job.command << std::endl;
+        {
+            std::cout << job.command;
+        }
         else
-            std::cout << "[" << job.jobNumber << "]" << marker << "  " << std::left << std::setw(24) << job.status << job.command.substr(0, job.command.size() - 2) << std::endl;
+        {
+            std::string command = job.command;
+
+            if (command.size() >= 2 &&
+                command.substr(command.size() - 2) == " &")
+            {
+                command.erase(command.size() - 2);
+            }
+
+            std::cout << command;
+        }
+
+        std::cout << std::endl;
     }
 
-    jobs.erase(std::remove_if( jobs.begin(), jobs.end(),
-        [](const Job& job)
-        {
-            return job.status == "Done";
-        }),
-    jobs.end());
+    jobs.erase(
+        std::remove_if(
+            jobs.begin(),
+            jobs.end(),
+            [](const Job& job)
+            {
+                return job.status == "Done";
+            }),
+        jobs.end());
 }
