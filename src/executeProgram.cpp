@@ -54,7 +54,7 @@ void executeProgram(const std::string &path, const std::vector<std::string> &arg
       if(background)
       {
           int jobNumber = addJob(pid, commandLine);
-          std::cout << "[" << nextJobNumber++ << "] "<< pid << std::endl;
+          std::cout << "[" << jobNumber << "] "<< pid << std::endl;
       }
       else
       {

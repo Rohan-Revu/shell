@@ -11,5 +11,5 @@ struct Job {
     std::string status;
 };
 
-std::int addJob(pid_t pid, const std::string& command);
+int addJob(pid_t pid, const std::string& command);
 void printJobs();
