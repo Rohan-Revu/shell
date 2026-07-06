@@ -85,3 +85,7 @@ void completeCommand(const std::vector<std::string> &args){
     }
   }
 }
+
+void jobCommand() {
+    
+}
