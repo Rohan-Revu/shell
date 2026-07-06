@@ -46,7 +46,15 @@ void executeProgram(const std::string &path, const std::vector<std::string> &arg
     perror("execv");
     exit(1);
   }
-  else{
-    waitpid(pid, nullptr, 0);
+  else
+  {
+      if(background)
+      {
+          std::cout << "[" << nextJobNumber << "] "<< pid << std::endl;
+      }
+      else
+      {
+          waitpid(pid, nullptr, 0);
+      }
   }
 }
