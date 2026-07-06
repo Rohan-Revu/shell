@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 #include <sys/wait.h>
-
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -32,7 +32,7 @@ void executeProgram(const std::string &path, const std::vector<std::string> &arg
   std::vector<char*> argv;
 
   static int nextJobNumber = 1;
-  
+
 
   for(auto& arg : args){
     argv.push_back(const_cast<char*>(arg.c_str()));
