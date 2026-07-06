@@ -20,3 +20,4 @@ struct Job
 
 int addJob(pid_t pid, const std::string& command);
 void printJobs();
+void reapJobs();
