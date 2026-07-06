@@ -77,14 +77,14 @@ std::string readCommand(){
 
                 if (endsWithSpace)
                 {
-                    if (words.size() >= 2)
+                    if (!words.empty())
                         previousWord = words.back();
                     else
                         previousWord = "";
                 }
                 else
                 {
-                    if (words.size() >= 3)
+                    if (words.size() >= 2)
                         previousWord = words[words.size() - 2];
                     else
                         previousWord = "";
