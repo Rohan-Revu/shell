@@ -15,8 +15,12 @@ int addJob(pid_t pid, const std::string& command)
     return jobs.back().jobNumber;
 }
 
-void printJobs() {
-    for (auto& job : jobs){
+
+
+static void updateJobStatus()
+{
+    for (auto& job : jobs)
+    {
         int status;
         pid_t result = waitpid(job.pid, &status, WNOHANG);
 
@@ -25,8 +29,28 @@ void printJobs() {
             job.status = JobStatus::Done;
         }
     }
+}
 
-    for (size_t i = 0; i < jobs.size(); i++){
+
+static void removeDoneJobs()
+{
+    jobs.erase(
+        std::remove_if(
+            jobs.begin(),
+            jobs.end(),
+            [](const Job& job)
+            {
+                return job.status == JobStatus::Done;
+            }),
+        jobs.end());
+}
+
+void printJobs()
+{
+    updateJobStatus();
+
+    for (size_t i = 0; i < jobs.size(); i++)
+    {
         auto& job = jobs[i];
 
         char marker = ' ';
@@ -39,46 +63,36 @@ void printJobs() {
         std::cout << "[" << job.jobNumber << "]"
                   << marker << "  ";
 
-        if (job.status == JobStatus::Running){
+        if (job.status == JobStatus::Running) {
             std::cout << std::left << std::setw(24) << "Running" << job.command;
         }
-        else{
+        else {
             std::string command = job.command;
 
-            if (command.size() >= 2 && command.substr(command.size() - 2) == " &") {
+            if (command.size() >= 2 &&
+                command.substr(command.size() - 2) == " &")
+            {
                 command.erase(command.size() - 2);
             }
 
             std::cout << std::left << std::setw(24) << "Done" << command;
         }
+
         std::cout << std::endl;
     }
 
-    // Remove completed jobs
-    jobs.erase(
-        std::remove_if(
-            jobs.begin(),
-            jobs.end(),
-            [](const Job& job)
-            {
-                return job.status == JobStatus::Done;
-            }),
-        jobs.end());
+    removeDoneJobs();
 }
 
-void reapJobs() {
-    for (auto& job : jobs){
-        int status;
-        pid_t result = waitpid(job.pid, &status, WNOHANG);
+void reapJobs()
+{
+    updateJobStatus();
 
-        if (result == job.pid && WIFEXITED(status))
-        {
-            job.status = JobStatus::Done;
-        }
-    }
+    for (size_t i = 0; i < jobs.size(); i++)
+    {
+        auto& job = jobs[i];
 
-    for (size_t i = 0; i < jobs.size(); i++){
-        if (jobs[i].status != JobStatus::Done)
+        if (job.status != JobStatus::Done)
             continue;
 
         char marker = ' ';
@@ -88,22 +102,22 @@ void reapJobs() {
         else if (jobs.size() >= 2 && i == jobs.size() - 2)
             marker = '-';
 
-        std::string command = jobs[i].command;
+        std::string command = job.command;
 
-        if (command.size() >= 2 && command.substr(command.size() - 2) == " &") {
+        if (command.size() >= 2 &&
+            command.substr(command.size() - 2) == " &")
+        {
             command.erase(command.size() - 2);
         }
 
-        std::cout << "[" << jobs[i].jobNumber << "]" << marker << "  " << std::left << std::setw(24) << "Done" << command << std::endl;
+        std::cout << "[" << job.jobNumber << "]"
+                  << marker << "  "
+                  << std::left
+                  << std::setw(24)
+                  << "Done"
+                  << command
+                  << std::endl;
     }
-    jobs.erase(
-        std::remove_if(
-            jobs.begin(),
-            jobs.end(),
-            [](const Job& job)
-            {
-                return job.status == JobStatus::Done;
-            }),
-        jobs.end());
 
+    removeDoneJobs();
 }
