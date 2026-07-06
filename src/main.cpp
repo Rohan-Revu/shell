@@ -11,7 +11,7 @@
 #include "commandExecutor.h"
 #include "autoComplete.h"
 #include "terminal.h"
-
+#include "jobs.h"
 
 int main() {
 
